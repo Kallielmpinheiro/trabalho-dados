@@ -53,3 +53,13 @@ def extracting_reading_level(soup):
 
     match = re.search(r"Reading ease score:\s*([\d.]+)", reading_text)
     return float(match.group(1))
+
+def format_author(name):
+    parts = [p.strip() for p in name.split(",")]
+
+    parts = [p for p in parts if not any(char.isdigit() for char in p)]
+
+    if len(parts) >= 2:
+        return f"{parts[1]} {parts[0]}"
+    
+    return parts[0]
