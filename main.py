@@ -1,10 +1,12 @@
 from scraper.gutenberg_scraper import GutenbergScraper
-
+from database.repository import BookRepository
 
 def main():
     scraper = GutenbergScraper()
-    scraper.extract()
-    scraper.upload_books()
+    repo = BookRepository()
+
+    books = scraper.extract()  
+    repo.save_books(books)              
 
 
 if __name__ == "__main__":
