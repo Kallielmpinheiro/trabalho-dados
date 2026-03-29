@@ -4,7 +4,6 @@ from bs4 import BeautifulSoup
 from common.helper import safe
 import os
 import sqlite3
-import pandas as pd
 
 from common.functions import (
     clean_summary,
@@ -12,6 +11,7 @@ from common.functions import (
     convert_date,
     extract_file_links,
     extract_subjects,
+    extracting_reading_level,
 )
 
 
@@ -33,7 +33,8 @@ class GutenbergScraper:
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             title TEXT,
             subtitle TEXT,
-            quantity_downloads TEXT,
+            quantity_downloads INT,
+            reading_level FLOAT,
             author TEXT,
             summary TEXT,
             language TEXT,
@@ -137,6 +138,7 @@ class GutenbergScraper:
                     category,
                     release_date,
                     date_modified,
+                    reading_level,
                 ] = self._handle_book(book_response)
 
                 data = {
@@ -151,6 +153,7 @@ class GutenbergScraper:
                     "category": category,
                     "release_date": release_date,
                     "date_modified": date_modified,
+                    "reading_level": reading_level,
                 }
                 self.data.append(data)
 
@@ -187,6 +190,7 @@ class GutenbergScraper:
             ),
             None,
         )
+        reading_level = safe(lambda: extracting_reading_level(soup), None)
 
         return [
             subjects,
@@ -196,6 +200,7 @@ class GutenbergScraper:
             category,
             release_date,
             date_modified,
+            reading_level,
         ]
 
     def upload_books(self):
@@ -208,8 +213,8 @@ class GutenbergScraper:
         for book in self.data:
             cursor.execute(
                 """
-                INSERT INTO books (title, subtitle, quantity_downloads, author, summary, language, category, release_date, date_modified)
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+                INSERT INTO books (title, subtitle, quantity_downloads, author, summary, language, category, release_date, date_modified, reading_level)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             """,
                 (
                     book["title"],
@@ -221,6 +226,7 @@ class GutenbergScraper:
                     book["category"],
                     book["release_date"],
                     book["date_modified"],
+                    book["reading_level"],
                 ),
             )
             book_id = cursor.lastrowid

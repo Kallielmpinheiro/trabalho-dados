@@ -44,3 +44,12 @@ def extract_subjects(soup):
         subjects.append(subject)
 
     return subjects
+
+
+def extracting_reading_level(soup):
+    th = soup.find("th", string="Reading Level")
+    td = th.find_next_sibling("td")
+    reading_text = td.get_text(strip=True)
+
+    match = re.search(r"Reading ease score:\s*([\d.]+)", reading_text)
+    return float(match.group(1))
