@@ -30,6 +30,8 @@ class GutenbergScraper:
     def _create_table(self):
         os.makedirs(os.path.dirname(self.db_path), exist_ok=True)
         conn = sqlite3.connect(self.db_path)
+        conn.execute("PRAGMA foreign_keys = ON")
+        
         cursor = conn.cursor()
 
         cursor.execute("""
@@ -59,7 +61,9 @@ class GutenbergScraper:
         CREATE TABLE IF NOT EXISTS book_authors (
             book_id INTEGER,
             author_id INTEGER,
-            PRIMARY KEY (book_id, author_id)
+            PRIMARY KEY (book_id, author_id),
+            FOREIGN KEY (book_id) REFERENCES books(id) ON DELETE CASCADE,
+            FOREIGN KEY (author_id) REFERENCES authors(id) ON DELETE CASCADE
         )
         """)
 
@@ -74,7 +78,9 @@ class GutenbergScraper:
         CREATE TABLE IF NOT EXISTS book_subjects (
             book_id INTEGER,
             subject_id INTEGER,
-            PRIMARY KEY (book_id, subject_id)
+            PRIMARY KEY (book_id, subject_id),
+            FOREIGN KEY (book_id) REFERENCES books(id) ON DELETE CASCADE,
+            FOREIGN KEY (subject_id) REFERENCES subjects(id) ON DELETE CASCADE
         )
         """)
 
@@ -82,7 +88,8 @@ class GutenbergScraper:
         CREATE TABLE IF NOT EXISTS links (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             book_id INTEGER,
-            link TEXT
+            link TEXT,
+            FOREIGN KEY (book_id) REFERENCES books(id) ON DELETE CASCADE
         )
         """)
 
@@ -233,8 +240,9 @@ class GutenbergScraper:
 
     def upload_books(self):
         conn = sqlite3.connect(self.db_path)
+        conn.execute("PRAGMA foreign_keys = ON")
         cursor = conn.cursor()
-
+        
         for book in self.data:
             cursor.execute("""
                 INSERT OR IGNORE INTO books
