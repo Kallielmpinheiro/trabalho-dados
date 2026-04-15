@@ -1,2 +1,2 @@
 # trabalho-dados
-Trabalho da mineração de dados
+Trabalho da disciplina de mineração de dados
