@@ -12,7 +12,7 @@ class GutenbergScraper:
         self.parser = BookParser()
         self.author_cache = {}
 
-    def extract(self, items=1100):
+    def extract(self, items=5000):
         results = []
         start_index = 1
         collected = 0
@@ -20,10 +20,11 @@ class GutenbergScraper:
         while collected < items:
             url = f"{self.url}/ebooks/search/?sort_order=downloads&start_index={start_index}"
             response = self.client.get(url)
+            print(f"Fetching: {url}")
 
-            if not response:
+            if not response or response.status_code != 200:
                 start_index += 25
-                continue
+                break
 
             soup = BeautifulSoup(response.text, "html.parser")
             books = soup.select("li.booklink")
@@ -31,11 +32,12 @@ class GutenbergScraper:
             if not books:
                 break
 
-            with ThreadPoolExecutor(max_workers=5) as executor:
+            with ThreadPoolExecutor(max_workers=7) as executor:
                 futures = [executor.submit(self._process_book, book) for book in books]
 
                 for future in as_completed(futures):
                     result = future.result()
+                    print(f"Processed: {result['title'] if result else 'Failed'}")
 
                     if result:
                         results.append(result)
@@ -50,6 +52,7 @@ class GutenbergScraper:
 
     def _process_book(self, book):
         try:
+            print(f"Processing book: {clean_text_tag(book.select_one('span.title'))}")
             base_data = self.parser.parse_list_item(book)
             response = self.client.get(f"{self.url}{base_data['link']}")
             if not response:
@@ -62,7 +65,8 @@ class GutenbergScraper:
             base_data.update(details)
             base_data["authors"] = authors
             return base_data
-        except:
+        except Exception as e:
+            print(f"Error processing book: {e}")
             return None
 
     def _handle_author(self, soup):
