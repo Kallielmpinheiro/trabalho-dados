@@ -1,2 +1,2 @@
 # trabalho-dados
-brunao da massa
+Trabalho da mineração de dados
