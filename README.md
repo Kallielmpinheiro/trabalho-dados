@@ -1,44 +1,63 @@
-# Metabase Dashboard Project
+# Metabase - Projeto de Visualização de Dados
 
-## Requisitos
+## Sobre o Projeto
 
-Antes de iniciar, certifique-se de que os seguintes softwares estão instalados:
+Este repositório contém os arquivos necessários para executar localmente a instância do Metabase utilizada no projeto, incluindo:
 
-* Docker Desktop (Windows)
-* Docker Engine e Docker Compose (Linux)
+* Banco de dados utilizado nas análises (`data`)
+* Banco interno do Metabase com dashboards, perguntas, coleções e usuários (`metabase-data`)
 
-## Estrutura do Projeto
+O arquivo compactado `metabase.rar` encontra-se na raiz deste repositório.
 
-Após extrair o arquivo compactado, a estrutura de diretórios deve permanecer exatamente como abaixo:
+---
+
+# Requisitos
+
+## Windows
+
+* Docker Desktop instalado e em execução
+
+## Linux
+
+* Docker Engine instalado e em execução
+
+---
+
+# Estrutura Esperada
+
+Após extrair o arquivo `metabase.rar`, a estrutura deve permanecer exatamente como abaixo:
 
 ```text
-.
+metabase/
 ├── data/
-│   └── gutenberg.db
 └── metabase-data/
     └── metabase.db/
         ├── metabase.db.mv.db
         └── metabase.db.trace.db
 ```
 
-## Executando no Windows
+---
 
-### 1. Extrair os arquivos
+# Execução no Windows
 
-Extraia o arquivo compactado para qualquer diretório de sua preferência.
+## 1. Extrair os arquivos
 
-### 2. Abrir o terminal
+Extraia o conteúdo do arquivo `metabase.rar`.
 
-Abra o Prompt de Comando (CMD) ou PowerShell dentro da pasta que contém os diretórios:
+## 2. Abrir o terminal
+
+Abra o Prompt de Comando (CMD) dentro da pasta `metabase`.
+
+A pasta atual deve conter:
 
 ```text
 data
 metabase-data
 ```
 
-### 3. Iniciar o Metabase
+## 3. Iniciar o Metabase
 
-Execute o comando abaixo:
+Execute:
 
 ```cmd
 docker run -d ^
@@ -50,7 +69,7 @@ docker run -d ^
 metabase/metabase:latest
 ```
 
-### 4. Acessar a aplicação
+## 4. Acessar a aplicação
 
 Abra o navegador e acesse:
 
@@ -58,48 +77,26 @@ Abra o navegador e acesse:
 http://localhost:3003
 ```
 
-### 5. Encerrar a aplicação
-
-```cmd
-docker stop metabase
-```
-
-### 6. Reiniciar a aplicação
-
-```cmd
-docker start metabase
-```
-
-### 7. Remover a aplicação
-
-```cmd
-docker rm -f metabase
-```
-
 ---
 
-## Executando no Linux
+# Execução no Linux
 
-### 1. Extrair os arquivos
+## 1. Extrair os arquivos
 
-Extraia o arquivo compactado para qualquer diretório.
+Extraia o conteúdo do arquivo `metabase.rar`.
 
-### 2. Abrir o terminal
+## 2. Abrir o terminal
 
-Entre na pasta que contém os diretórios:
+Entre na pasta `metabase`.
+
+A pasta atual deve conter:
 
 ```text
 data
 metabase-data
 ```
 
-Exemplo:
-
-```bash
-cd caminho/do/projeto
-```
-
-### 3. Iniciar o Metabase
+## 3. Iniciar o Metabase
 
 Execute:
 
@@ -113,7 +110,7 @@ docker run -d \
 metabase/metabase:latest
 ```
 
-### 4. Acessar a aplicação
+## 4. Acessar a aplicação
 
 Abra o navegador e acesse:
 
@@ -121,19 +118,40 @@ Abra o navegador e acesse:
 http://localhost:3003
 ```
 
-### 5. Encerrar a aplicação
+---
+
+# Credenciais de Acesso
+
+Utilize as seguintes credenciais:
+
+```text
+E-mail: fatec@gmail.com
+Senha: 192837Aa
+```
+
+---
+
+# Comandos Úteis
+
+## Parar o Metabase
+
+### Windows e Linux
 
 ```bash
 docker stop metabase
 ```
 
-### 6. Reiniciar a aplicação
+## Iniciar novamente
+
+### Windows e Linux
 
 ```bash
 docker start metabase
 ```
 
-### 7. Remover a aplicação
+## Remover o container
+
+### Windows e Linux
 
 ```bash
 docker rm -f metabase
@@ -141,25 +159,15 @@ docker rm -f metabase
 
 ---
 
-## Observações
+# Observações
 
-* Os dashboards, perguntas, coleções e usuários já estão configurados no banco interno do Metabase.
-* O banco de dados analisado encontra-se na pasta `data`.
-* Não altere a estrutura das pastas após a extração do arquivo compactado.
-* Caso já exista um container chamado `metabase`, remova-o antes de executar os comandos apresentados:
-
-### Windows
-
-```cmd
-docker rm -f metabase
-```
-
-### Linux
+* Os dashboards, perguntas, coleções e filtros já estão configurados.
+* O banco de dados utilizado nas análises encontra-se na pasta `data`.
+* Não altere a estrutura das pastas após a extração do arquivo.
+* Caso já exista um container chamado `metabase`, remova-o antes da execução:
 
 ```bash
 docker rm -f metabase
 ```
 
-## Credenciais de Acesso
-
-Utilize as credenciais fornecidas separadamente para acessar o sistema.
+* O projeto foi configurado para utilizar caminhos relativos, permitindo sua execução em diferentes máquinas sem necessidade de alterar diretórios ou caminhos absolutos.
